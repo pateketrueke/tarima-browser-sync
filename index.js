@@ -2,6 +2,8 @@ var fs = require('fs'),
     url = require('url'),
     path = require('path');
 
+var Convert = require('ansi-to-html');
+
 var browserSync;
 
 function fixedBrowsers(value) {
@@ -15,10 +17,11 @@ function fixedBrowsers(value) {
 function run(done) {
   browserSync = browserSync || require('browser-sync');
 
-  var exists = this.util.exists;
-
-  var notify = this.notify,
+  var exists = this.util.exists,
+      notify = this.util.notify,
       logger = this.logger;
+
+  var cwd = this.opts.cwd;
 
   var options = this.opts;
 
@@ -90,18 +93,22 @@ function run(done) {
 
   var onError = this.emit.bind(null, 'error');
 
-  this.on('error', function(message) {
-    bs.sockets.emit('bs:notify', message);
+  var convert = new Convert();
 
+  this.on('error', function(params) {
+    bs.sockets.emit('bs:notify', params);
     notify('An error has occurred!', options.notifications.title, options.notifications.errIcon);
   });
 
   this.on('end', function(err, result) {
     if (err) {
-      onError(err.toString());
+      onError({
+        src: err.filepath ? path.relative(cwd, err.filepath) : null,
+        msg: convert.toHtml(err.toString())
+      });
     }
 
-    if (result.output.length) {
+    if (result && result.output.length) {
       bs.reload(result.output);
       bs.sockets.emit('bs:notify:clear');
     }

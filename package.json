@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "ansi-to-html": "^0.4.1",
     "browser-sync": "^2.12.3"
   }
 }
