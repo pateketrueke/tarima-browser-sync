@@ -18,7 +18,6 @@ function run(done) {
   browserSync = browserSync || require('browser-sync');
 
   var exists = this.util.exists,
-      notify = this.util.notify,
       logger = this.logger;
 
   var cwd = this.opts.cwd;
@@ -97,18 +96,17 @@ function run(done) {
 
   this.on('error', function(params) {
     bs.sockets.emit('bs:notify', params);
-    notify('An error has occurred!', options.notifications.title, options.notifications.errIcon);
   });
 
   this.on('end', function(err, result) {
     if (err) {
-      onError({
+      return onError({
         src: err.filepath ? path.relative(cwd, err.filepath) : null,
         msg: convert.toHtml(err.toString())
       });
     }
 
-    if (result && result.output.length) {
+    if (result.output.length) {
       bs.reload(result.output);
       bs.sockets.emit('bs:notify:clear');
     }
