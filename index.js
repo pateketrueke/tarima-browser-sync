@@ -86,7 +86,8 @@ function run(done) {
   var bs = browserSync.create();
 
   bs.init(bsOptions, function(err) {
-    logger.printf('{hint.cyanBright|Starting server at: http://localhost:%s/}\n', bs.getOption('port'));
+    logger.getLogger()
+      .INFO('{ok|Starting server at: http://localhost:%s/}', bs.getOption('port'));
     done(err);
   });
 

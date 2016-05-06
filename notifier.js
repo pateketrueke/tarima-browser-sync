@@ -20,7 +20,7 @@
     rootEl.innerHTML = [
       '<div style="padding:10px;border:1px dashed #7C7877;overflow:auto;color:#FFF6D0">',
       params.src ? '<h3 style="margin:0;padding:0;color:#7C7877">' + params.src + '</h3>' : '',
-      '<pre style="white-space:pre;margin:0;border-radius:3px;overflow:auto;padding:.3em '
+      '<pre style="margin:0;border-radius:3px;overflow:auto;padding:.3em '
         + '.5em;color:#7C7877;background:#F0E5DE;border-left:3em solid rgba(0, 0, 0, .3);">' + params.msg + '</pre></div>'
     ].join('');
   });
