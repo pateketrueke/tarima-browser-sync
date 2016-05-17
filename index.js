@@ -87,7 +87,7 @@ function run(done) {
 
   bs.init(bsOptions, function(err) {
     logger.getLogger()
-      .INFO('{ok|Starting server at: http://localhost:%s/}', bs.getOption('port'));
+      .INFO('{hint.cyanBright|Starting server at: http://localhost:%s/}', bs.getOption('port'));
     done(err);
   });
 
