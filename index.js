@@ -87,6 +87,7 @@ function run(done) {
 
   bs.init(bsOptions, function(err) {
     logger.getLogger()
+      .INFO('{log|Serving files from `%s`}', path.relative(options.cwd, options.public))
       .INFO('{hint.cyanBright|Starting server at: http://localhost:%s/}', bs.getOption('port'));
     done(err);
   });
