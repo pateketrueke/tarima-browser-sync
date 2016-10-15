@@ -91,7 +91,7 @@ function run(done) {
   bs.init(bsOptions, function(err) {
     if (!err) {
       logger.getLogger()
-        .INFO('{hint.cyan|http://localhost:%s}%s  {gray|%s}',
+        .INFO('{hint.cyan|http://localhost:%s}%s {gray|+%s}',
           bs.getOption('port'), options.proxy ? ' {gray|(' + options.proxy + ')}' : '', timeDiff(start));
     }
 
@@ -99,7 +99,7 @@ function run(done) {
   });
 
   logger.getLogger()
-    .INFO('{log.gray|Serving files from} `%s`  {gray|%s}',
+    .INFO('{log.gray|Serving files from} `%s` {gray|+%s}',
       path.relative(options.cwd, options.public), timeDiff(start));
 
   // restart
