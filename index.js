@@ -15,9 +15,12 @@ function fixedBrowsers(value) {
 }
 
 function run(done) {
+  var start = new Date();
+
   browserSync = browserSync || require('browser-sync');
 
-  var exists = this.util.exists,
+  var timeDiff = this.util.timeDiff,
+      exists = this.util.exists,
       logger = this.logger;
 
   var cwd = this.opts.cwd;
@@ -86,11 +89,21 @@ function run(done) {
   var bs = browserSync.create();
 
   bs.init(bsOptions, function(err) {
-    logger.getLogger()
-      .INFO('{log|Serving files from `%s`}', path.relative(options.cwd, options.public))
-      .INFO('{hint.cyanBright|Starting server at: http://localhost:%s/}', bs.getOption('port'));
+    if (!err) {
+      logger.getLogger()
+        .INFO('{hint.cyan|http://localhost:%s}%s {gray|+%s}',
+          bs.getOption('port'), options.proxy ? ' {gray|(' + options.proxy + ')}' : '', timeDiff(start));
+    }
+
     done(err);
   });
+
+  logger.getLogger()
+    .INFO('{log.gray|Serving files from} `%s` {gray|+%s}',
+      path.relative(options.cwd, options.public), timeDiff(start));
+
+  // restart
+  start = new Date();
 
   var onError = this.emit.bind(null, 'error');
 
