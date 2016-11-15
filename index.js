@@ -26,7 +26,7 @@ function run(done) {
 
   var bsOptions = {
     logLevel: 'silent',
-    port: options.port || process.env.PORT || 3000,
+    port: options.port,
     open: options.open === true,
     browser: fixedBrowsers(options.browser) || 'default',
     plugins: [{
@@ -104,7 +104,10 @@ function run(done) {
     if (err) {
       return onError({
         src: err.filepath ? path.relative(cwd, err.filepath) : null,
-        msg: convert.toHtml(err.message || err.toString())
+        msg: convert.toHtml((err.message || err.toString())
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/&/g, '&amp;'))
       });
     }
 
