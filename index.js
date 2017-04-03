@@ -29,9 +29,9 @@ function run(done) {
 
   var bsOptions = {
     logLevel: 'silent',
-    port: options.port || process.env.PORT || 3000,
-    open: options.open === true,
-    browser: fixedBrowsers(options.browser) || 'default',
+    port: options.flags.port || process.env.PORT || 3000,
+    open: Boolean(options.flags.open),
+    browser: fixedBrowsers(options.flags.open) || 'default',
     plugins: [{
       plugin: function() {
         // nothing
@@ -56,8 +56,8 @@ function run(done) {
     ui: false
   };
 
-  if (typeof options.proxy === 'string') {
-    bsOptions.proxy = options.proxy;
+  if (typeof options.flags.proxy === 'string') {
+    bsOptions.proxy = options.flags.proxy;
     bsOptions.serveStatic = [options.public];
   } else {
     bsOptions.server = {
@@ -91,15 +91,15 @@ function run(done) {
   bs.init(bsOptions, function(err) {
     if (!err) {
       logger.getLogger()
-        .INFO('{hint.cyan|http://localhost:%s}%s {gray|+%s}',
-          bs.getOption('port'), options.proxy ? ' {gray|(' + options.proxy + ')}' : '', timeDiff(start));
+        .info('{hint.cyan|http://localhost:%s}%s {gray|+%s}',
+          bs.getOption('port'), options.flags.proxy ? ' {gray|(' + options.flags.proxy + ')}' : '', timeDiff(start));
     }
 
     done(err);
   });
 
   logger.getLogger()
-    .INFO('{log.gray|Serving files from} `%s` {gray|+%s}',
+    .info('{log.gray|Serving files from} `%s` {gray|+%s}',
       path.relative(options.cwd, options.public), timeDiff(start));
 
   // restart
@@ -129,7 +129,7 @@ function run(done) {
 }
 
 module.exports = function(cb) {
-  if (this.opts.server || this.opts.proxy) {
+  if ((this.opts.flags.watch || this.opts.flags.server) === true || this.opts.flags.proxy) {
     run.call(this, cb);
   } else {
     cb();
