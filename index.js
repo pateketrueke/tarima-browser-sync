@@ -132,7 +132,8 @@ function run(done) {
 }
 
 module.exports = function(cb) {
-  if ((this.opts.flags.watch || this.opts.flags.server) === true || this.opts.flags.proxy) {
+  if (this.opts.flags.env === 'development'
+    && (this.opts.flags.port || thisopts.flags.serve || this.opts.flags.proxy)) {
     run.call(this, cb);
   } else {
     cb();
