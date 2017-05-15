@@ -99,7 +99,7 @@ function run(done) {
   });
 
   logger.getLogger()
-    .info('{log.gray|Serving files from} `%s` {gray|+%s}',
+    .info('{log.gray|Serving files from} {yellow|%s} {gray|+%s}',
       path.relative(options.cwd, options.public), timeDiff(start));
 
   // restart
