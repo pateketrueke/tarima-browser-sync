@@ -27,6 +27,10 @@ function run(done) {
 
   var options = this.opts;
 
+  var bsOpts = this.opts.pluginOptions['tarima-browser-sync']
+    || this.opts.pluginOptions['browser-sync']
+    || {};
+
   var bsOptions = {
     logLevel: 'silent',
     port: options.flags.port || process.env.PORT || 3000,
@@ -124,10 +128,15 @@ function run(done) {
       });
     }
 
-    if (result.output.length) {
-      bs.reload(result.output);
+    setTimeout(function () {
+      if (result.output.length) {
+        bs.reload(result.output);
+      } else {
+        bs.reload();
+      }
+
       bs.sockets.emit('bs:notify:clear');
-    }
+    }, bsOpts.timeout || 100);
   });
 }
 
