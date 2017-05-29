@@ -93,6 +93,9 @@ function run(done) {
 
   bs.init(bsOptions, function(err) {
     if (!err) {
+      logger.info('\r\r{% log Serving files from: %} {% yellow %s %}\n',
+        path.relative(options.cwd, options.public));
+
       logger.info('\r\r{% link http://localhost:%s %}%s\n',
         bs.getOption('port'),
         options.flags.proxy
@@ -102,9 +105,6 @@ function run(done) {
 
     done(err);
   });
-
-  logger.info('\r\r{% log Serving files from: %} {% yellow %s %}\n',
-    path.relative(options.cwd, options.public));
 
   // restart
   start = new Date();
