@@ -19,8 +19,7 @@ function run(done) {
 
   browserSync = browserSync || require('browser-sync');
 
-  var timeDiff = this.util.timeDiff,
-      exists = this.util.exists,
+  var exists = this.util.exists,
       logger = this.logger;
 
   var cwd = this.opts.cwd;
@@ -94,17 +93,18 @@ function run(done) {
 
   bs.init(bsOptions, function(err) {
     if (!err) {
-      logger.getLogger()
-        .info('{hint.cyan|http://localhost:%s}%s {gray|+%s}',
-          bs.getOption('port'), options.flags.proxy ? ' {gray|(' + options.flags.proxy + ')}' : '', timeDiff(start));
+      logger.info('\r\r{% link http://localhost:%s %}%s\n',
+        bs.getOption('port'),
+        options.flags.proxy
+          ? ' {% gray (' + options.flags.proxy + ') %}'
+          : '');
     }
 
     done(err);
   });
 
-  logger.getLogger()
-    .info('{log.gray|Serving files from} {yellow|%s} {gray|+%s}',
-      path.relative(options.cwd, options.public), timeDiff(start));
+  logger.info('\r\r{% log Serving files from: %} {% yellow %s %}\n',
+    path.relative(options.cwd, options.public));
 
   // restart
   start = new Date();
