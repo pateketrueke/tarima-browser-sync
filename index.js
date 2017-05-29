@@ -28,6 +28,7 @@ function run(done) {
 
   var bsOpts = this.opts.pluginOptions['tarima-browser-sync']
     || this.opts.pluginOptions['browser-sync']
+    || this.opts.pluginOptions.bs
     || {};
 
   var bsOptions = {
@@ -59,13 +60,24 @@ function run(done) {
     ui: false
   };
 
+  var dirs = [options.public].concat(
+    !Array.isArray(bsOpts.serve) && bsOpts.serve
+    ? [bsOpts.serve]
+    : bsOpts.serve || []
+  );
+
+  dirs.forEach(function(dir) {
+    logger.info('\r\r{% log Serving files from: %} {% yellow %s %}\n',
+      path.relative(options.cwd, dir));
+  })
+
   if (typeof options.flags.proxy === 'string') {
     bsOptions.proxy = options.flags.proxy;
-    bsOptions.serveStatic = [options.public];
+    bsOptions.serveStatic = dirs;
   } else {
     bsOptions.server = {
       index: 'index.html',
-      baseDir: options.public,
+      baseDir: dirs,
       middleware: [function(req, res, next) {
         var name = url.parse(req.url).pathname;
 
@@ -93,9 +105,6 @@ function run(done) {
 
   bs.init(bsOptions, function(err) {
     if (!err) {
-      logger.info('\r\r{% log Serving files from: %} {% yellow %s %}\n',
-        path.relative(options.cwd, options.public));
-
       logger.info('\r\r{% link http://localhost:%s %}%s\n',
         bs.getOption('port'),
         options.flags.proxy
