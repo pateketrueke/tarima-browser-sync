@@ -72,7 +72,13 @@ function run(done) {
   })
 
   if (typeof options.flags.proxy === 'string') {
-    bsOptions.proxy = options.flags.proxy;
+    var _proxy = options.flags.proxy;
+
+    if (_proxy.charAt() === ':') {
+      _proxy = 'localhost' + _proxy;
+    }
+
+    bsOptions.proxy = _proxy;
     bsOptions.serveStatic = dirs;
   } else {
     bsOptions.server = {
