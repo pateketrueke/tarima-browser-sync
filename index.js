@@ -82,20 +82,22 @@ function run(done) {
     bsOptions.serveStatic = dirs;
   } else {
     bsOptions.server = {
-      index: 'index.html',
+      index: options.index || 'index.html',
       baseDir: dirs,
       middleware: [function(req, res, next) {
-        var name = url.parse(req.url).pathname;
+        if (req.method === 'GET') {
+          var name = url.parse(req.url).pathname;
 
-        // TODO: improve this behavior
-        if (path.basename(name).indexOf('.') > -1) {
-          return next();
-        }
+          // TODO: improve this behavior
+          if (path.basename(name).indexOf('.') > -1) {
+            return next();
+          }
 
-        var file = path.join(options.public, url.parse(req.url).pathname);
+          var file = path.join(options.public, url.parse(req.url).pathname);
 
-        if (!exists(file)) {
-          req.url = '/index.html';
+          if (!exists(file)) {
+            req.url = '/' + (options.index || 'index.html');
+          }
         }
 
         next();
