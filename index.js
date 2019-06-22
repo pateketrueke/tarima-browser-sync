@@ -60,16 +60,12 @@ function run(done) {
     ui: false
   };
 
-  var dirs = [options.public].concat(
-    !Array.isArray(bsOpts.serve) && bsOpts.serve
-    ? [bsOpts.serve]
-    : bsOpts.serve || []
-  );
+  var serveDirs = bsOpts.serve || options.serve || [];
+  var sources = [path.relative(cwd, options.public) || '.'].concat(serveDirs);
+  var dirs = [options.public].concat(serveDirs);
 
-  dirs.forEach(function(dir) {
-    logger.info('\r\r{% log Serving files from: %} {% yellow %s %}\n',
-      path.relative(options.cwd, dir));
-  })
+  logger.info('\r\r{% log Serving files from: %} %s\n',
+    sources.map(x => '{% yellow ' + x + ' %}').join('{% gray , %} '));
 
   if (typeof options.flags.proxy === 'string') {
     var _proxy = options.flags.proxy;
